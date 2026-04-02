@@ -1,0 +1,30 @@
+name: Challenge 20 Module - Check Tests to Develop
+
+# Run tests for PRs to Develop branch
+on:
+  pull_request:
+    branches:
+      - develop # Run tests for PRs against develop branch
+
+jobs:
+  test-runner:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: CI and CD using Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: install dependencies
+        run: npm ci
+      - name: Cypress run component tests
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm run start
+          component: true #Should run Component testing
