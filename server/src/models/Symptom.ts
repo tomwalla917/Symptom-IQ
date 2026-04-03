@@ -1,25 +1,52 @@
 import { Schema, model } from 'mongoose';
 
-interface IAnswer extends Document {
-  text: string;
-  isCorrect: boolean;
+export interface ISymptom extends Document{
+  userId: Schema.Types.ObjectId;
+  symptomType: Schema.Types.ObjectId;
+  severity: number;
+  duration: string;
+  possibleTrigger: string;
+  notes: string;
+  createdAt: Date;
 }
 
-interface IQuestion extends Document {
-  question: string;
-  answers: IAnswer[];
-}
+const symptomSchema = new Schema<ISymptom>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    symptomType: {
+      type: Schema.Types.ObjectId,
+      ref: 'SymptomType',
+      required: true,
+    },
+    severity: {
+      type: Number,
+      required: true,
+      min: 1, 
+      max: 10,
+    },
+    duration: {
+      type: String, 
+      required: true,
+    },
+    possibleTrigger: {
+      type: String,
+      required: false, 
+    },
+    notes: {
+      type: String, 
+      required: true, 
+    },
 
-const QuestionSchema = new Schema<IQuestion>({
-  question: { type: String, required: true },
-  answers: [
-    {
-      text: { type: String, required: true },
-      isCorrect: { type: Boolean, required: true }
-    }
-  ]
-});
+},
+  {
+    timestamps: true,
+  }
+);
 
-const Question = model<IQuestion>('Question', QuestionSchema);
-export { IQuestion, QuestionSchema };
-export default Question;
+const Symptom = model<ISymptom>('Symptom', symptomSchema);
+
+export default Symptom;
