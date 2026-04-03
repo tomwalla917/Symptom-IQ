@@ -1,19 +1,76 @@
-import express from 'express';
-// import path from 'node:path';
-import db from './config/connection.js';
-import routes from './routes/index.js';
+import "dotenv/config";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express4";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import typeDefs from "./schemas/typeDefs.js";
+import resolvers from "./schemas/resolvers.js";
+import { authMiddleware } from "./utils/auth.js";
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    introspection: true,
+  });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+  const MONGODB_URI =
+    process.env.MONGODB_URI || "mongodb://localhost:27017/SymptomIQ";
+  await mongoose.connect(MONGODB_URI);
+  console.log("📊 Connected to MongoDB:", MONGODB_URI);
 
-// Serves static files in the entire client's dist folder
-app.use(express.static('../client/dist'));
+  await server.start();
 
-app.use(routes);
+  const app = express();
 
-db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  app.use(
+    "/graphql",
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+
+        const isLocalhostOrigin =
+          /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+        callback(null, isLocalhostOrigin);
+      },
+      credentials: true,
+    }),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => authMiddleware({ req }),
+    }),
+  );
+
+  app.get("/health", (_req, res) => {
+    res.json({
+      status: "ok",
+      service: "symptom-iq",
+      timestamp: new Date().toISOString(),
+      mongodb:
+        mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    });
+  });
+
+  const PORT = process.env.PORT || 4000;
+
+  app.listen(PORT, () => {
+    console.log("🚀 Apollo Server with Express running!");
+    console.log(`   📍 GraphQL endpoint: http://localhost:${PORT}/graphql`);
+    console.log(`   📍 Health check: http://localhost:${PORT}/health`);
+  });
+}
+
+process.on("SIGINT", async () => {
+  console.log("🛑 Shutting down server...");
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
+startServer().catch(error => {
+  console.error("❌ Failed to start server:", error);
+  process.exit(1);
 });
