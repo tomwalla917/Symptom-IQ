@@ -37,6 +37,16 @@ const typeDefs = gql`
       createdAt: String
     ): Symptom
 
+    updateSymptom(
+      id: ID!
+      symptomType: String
+      severity: Int
+      duration: String
+      possibleTrigger: String
+      notes: String
+      createdAt: String
+    ): Symptom
+
     deleteSymptom(id: ID!): Symptom
 
     register(username: String!, email: String!, password: String!): AuthPayload!
