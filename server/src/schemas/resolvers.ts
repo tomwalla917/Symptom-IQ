@@ -23,7 +23,7 @@ const resolvers = {
 
       const user = await User.create({
         username: args.username.trim(),
-        email: args.username.trim(),
+        email: args.email.trim(),
         password: args.password.trim(),
       });
 
