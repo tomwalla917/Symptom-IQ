@@ -1,11 +1,5 @@
-import Quiz from './components/Quiz';
-
 function App() {
-  return (
-    <div className="App">
-      <Quiz />
-    </div>
-  );
+  return <div className="App"></div>;
 }
 
 export default App;
