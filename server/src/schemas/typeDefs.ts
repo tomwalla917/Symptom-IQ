@@ -3,6 +3,7 @@ import { gql } from "graphql-tag";
 const typeDefs = gql`
   type User {
     _id: ID!
+    username: String!
     email: String!
   }
 
@@ -23,7 +24,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getSymptoms: [Symptom]
+    getSymptom: [Symptom]
   }
 
   type Mutation {
@@ -38,7 +39,7 @@ const typeDefs = gql`
 
     deleteSymptom(id: ID!): Symptom
 
-    register(email: String!, password: String!): AuthPayload!
+    register(username: String!, email: String!, password: String!): AuthPayload!
     login(email: String!, password: String!): AuthPayload!
   }
 `;
