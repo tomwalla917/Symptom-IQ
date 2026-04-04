@@ -38,6 +38,7 @@ const typeDefs = gql`
     ): Symptom
 
     updateSymptom(
+      id: ID!
       symptomType: String
       severity: Int
       duration: String
