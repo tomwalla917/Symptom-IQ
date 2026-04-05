@@ -24,11 +24,13 @@ const typeDefs = gql`
   }
 
   type Query {
-    getSymptom: [Symptom]
+    getSymptoms: [Symptom]
+    getSymptom(id: ID!): Symptom
   }
 
   type Mutation {
     addSymptom(
+      userId: ID!
       symptomType: String!
       severity: Int!
       duration: String!
@@ -38,6 +40,7 @@ const typeDefs = gql`
     ): Symptom
 
     updateSymptom(
+      userId: ID!
       id: ID!
       symptomType: String
       severity: Int
