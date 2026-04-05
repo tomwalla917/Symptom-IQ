@@ -38,8 +38,10 @@ function UserAuth() {
     email: "",
     password: "",
   });
+
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [statusMessage, setStatusMessage] = useState("");
+  const [isLoginView, setIsLoginView] = useState(true);
 
   const [register, { loading: registering, error: registerError }] =
     useMutation<RegisterData, RegisterVars>(REGISTER_MUTATION);
@@ -107,78 +109,102 @@ function UserAuth() {
     <section className="card">
       <h2>Welcome to SymptomIQ!</h2>
 
-      <form onSubmit={handleRegister}>
-        <h3>Register</h3>
-        <label htmlFor="register-username">Username</label>
-        <input
-          id="register-username"
-          value={registerForm.username}
-          onChange={event =>
-            setRegisterForm(prev => ({ ...prev, username: event.target.value }))
-          }
-          placeholder="Enter username"
-          disabled={registering}
-        />
+      {isLoginView ? (
+        <form onSubmit={handleLogin}>
+          <h3>Login</h3>
 
-        <label htmlFor="register-email">Email</label>
-        <input
-          id="register-email"
-          type="email"
-          value={registerForm.email}
-          onChange={event =>
-            setRegisterForm(prev => ({ ...prev, email: event.target.value }))
-          }
-          placeholder="Enter email"
-          disabled={registering}
-        />
+          <label htmlFor="login-email">Email</label>
+          <input
+            id="login-email"
+            type="email"
+            value={loginForm.email}
+            onChange={event =>
+              setLoginForm(prev => ({ ...prev, email: event.target.value }))
+            }
+            placeholder="Enter email"
+            disabled={loggingIn}
+          />
 
-        <label htmlFor="register-password">Password</label>
-        <input
-          id="register-password"
-          type="password"
-          value={registerForm.password}
-          onChange={event =>
-            setRegisterForm(prev => ({ ...prev, password: event.target.value }))
-          }
-          placeholder="Enter password"
-          disabled={registering}
-        />
+          <label htmlFor="login-password">Password</label>
+          <input
+            id="login-password"
+            type="password"
+            value={loginForm.password}
+            onChange={event =>
+              setLoginForm(prev => ({ ...prev, password: event.target.value }))
+            }
+            placeholder="Enter password"
+            disabled={loggingIn}
+          />
 
-        <button type="submit" disabled={registering}>
-          {registering ? "Registering..." : "Register"}
-        </button>
-      </form>
+          <button type="submit" disabled={loggingIn}>
+            {loggingIn ? "Logging in..." : "Login"}
+          </button>
 
-      <form onSubmit={handleLogin}>
-        <h3>Login</h3>
-        <label htmlFor="login-email">Email</label>
-        <input
-          id="login-email"
-          type="email"
-          value={loginForm.email}
-          onChange={event =>
-            setLoginForm(prev => ({ ...prev, email: event.target.value }))
-          }
-          placeholder="Enter email"
-          disabled={loggingIn}
-        />
+          <p>
+            Don&apos;t have an account?{" "}
+            <button type="button" onClick={() => setIsLoginView(false)}>
+              Register
+            </button>
+          </p>
+        </form>
+      ) : (
+        <form onSubmit={handleRegister}>
+          <h3>Register</h3>
 
-        <label htmlFor="login-password">Password</label>
-        <input
-          id="login-password"
-          type="password"
-          value={loginForm.password}
-          onChange={event =>
-            setLoginForm(prev => ({ ...prev, password: event.target.value }))
-          }
-          placeholder="Enter password"
-          disabled={loggingIn}
-        />
+          <label htmlFor="register-username">Username</label>
+          <input
+            id="register-username"
+            value={registerForm.username}
+            onChange={event =>
+              setRegisterForm(prev => ({
+                ...prev,
+                username: event.target.value,
+              }))
+            }
+            placeholder="Enter username"
+            disabled={registering}
+          />
 
-        <button type="submit" disabled={loggingIn}>
-          {loggingIn ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <label htmlFor="register-email">Email</label>
+          <input
+            id="register-email"
+            type="email"
+            value={registerForm.email}
+            onChange={event =>
+              setRegisterForm(prev => ({ ...prev, email: event.target.value }))
+            }
+            placeholder="Enter email"
+            disabled={registering}
+          />
+
+          <label htmlFor="register-password">Password</label>
+          <input
+            id="register-password"
+            type="password"
+            value={registerForm.password}
+            onChange={event =>
+              setRegisterForm(prev => ({
+                ...prev,
+                password: event.target.value,
+              }))
+            }
+            placeholder="Enter password"
+            disabled={registering}
+          />
+
+          <button type="submit" disabled={registering}>
+            {registering ? "Registering..." : "Register"}
+          </button>
+
+          <p>
+            Already have an account?{" "}
+            <button type="button" onClick={() => setIsLoginView(true)}>
+              Login
+            </button>
+          </p>
+        </form>
+      )}
 
       <button type="button" onClick={handleLogout}>
         Logout
