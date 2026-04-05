@@ -1,11 +1,12 @@
 {
-  "name": "coding-quiz",
+  "name": "symptom-iq",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "start": "cd server && npm run start",
     "seed": "cd server && npm run seed",
-    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
+    "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "concurrently \"cd server && npm run build\" \"cd client && npm run build\"",
     "render-build": "npm install && npm run build",
@@ -18,7 +19,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
-    "concurrently": "^8.2.0",
+    "concurrently": "^8.2.2",
     "cypress": "^13.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
