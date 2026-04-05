@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { LOGIN_MUTATION, REGISTER_MUTATION } from "../graphql/mutations";
+import { useMutation } from "@apollo/client/react";
+import { LOGIN_MUTATION, REGISTER_MUTATION } from "../graphql/queries";
 
 interface User {
   _id: string;
