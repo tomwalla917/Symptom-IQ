@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import { GET_SYMPTOMS, ADD_SYMPTOM, DELETE_SYMPTOM } from "../graphql/queries";
 import StatsCard from "../components/StatsCard";
 import SymptomCard from "../components/SymptomCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
@@ -35,17 +36,23 @@ export default function Dashboard() {
     setShowModal(false);
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  };
+
   return (
     <div>
       <header>
         <div>
-          <div>S</div>
           <div>
             <div>Symptom Tracker</div>
             <div>Welcome back!</div>
           </div>
         </div>
-        <button>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
       </header>
 
       <main>
