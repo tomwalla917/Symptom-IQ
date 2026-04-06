@@ -79,6 +79,8 @@ function UserAuth() {
     setRegisterForm({ username: "", email: "", password: "" });
   };
 
+  const navigate = useNavigate();
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!loginForm.email.trim() || !loginForm.password.trim()) {
@@ -93,7 +95,6 @@ function UserAuth() {
     });
 
     const token = result.data?.login.token;
-    const navigate = useNavigate();
 
     if (token) {
       localStorage.setItem("authToken", token);

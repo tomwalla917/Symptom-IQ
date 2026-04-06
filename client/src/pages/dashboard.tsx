@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client/react";
 import { GET_SYMPTOMS, ADD_SYMPTOM, DELETE_SYMPTOM } from "../graphql/queries";
-// import StatsCard from '../components/StatsCard';
-// import SymptomCard from '../components/SymptomCard';
+import StatsCard from "../components/StatsCard";
+import SymptomCard from "../components/SymptomCard";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
