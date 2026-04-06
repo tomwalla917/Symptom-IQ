@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client/react";
+import { useNavigate } from "react-router-dom";
 import { LOGIN_MUTATION, REGISTER_MUTATION } from "../graphql/queries";
 
 interface User {
@@ -78,6 +79,8 @@ function UserAuth() {
     setRegisterForm({ username: "", email: "", password: "" });
   };
 
+  const navigate = useNavigate();
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!loginForm.email.trim() || !loginForm.password.trim()) {
@@ -92,8 +95,10 @@ function UserAuth() {
     });
 
     const token = result.data?.login.token;
+
     if (token) {
       localStorage.setItem("authToken", token);
+      navigate("/dashboard");
       setStatusMessage("Logged in and authenticated");
     }
 

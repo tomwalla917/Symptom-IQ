@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_SYMPTOMS, ADD_SYMPTOM, DELETE_SYMPTOM } from '../graphql/queries';
-import StatsCard from '../components/StatsCard';
-import SymptomCard from '../components/SymptomCard';
+import { useState } from "react";
+import { useQuery, useMutation } from "@apollo/client/react";
+import { GET_SYMPTOMS, ADD_SYMPTOM, DELETE_SYMPTOM } from "../graphql/queries";
+import StatsCard from "../components/StatsCard";
+import SymptomCard from "../components/SymptomCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: '', severity: 5, notes: '' });
+  const [form, setForm] = useState({ name: "", severity: 5, notes: "" });
 
   const { data, loading } = useQuery(GET_SYMPTOMS);
   const [addSymptom] = useMutation(ADD_SYMPTOM, {
@@ -18,35 +19,50 @@ export default function Dashboard() {
 
   const symptoms = data?.symptoms ?? [];
   const avgSeverity = symptoms.length
-    ? (symptoms.reduce((sum: number, s: any) => sum + s.severity, 0) / symptoms.length).toFixed(1)
+    ? (
+        symptoms.reduce((sum: number, s: any) => sum + s.severity, 0) /
+        symptoms.length
+      ).toFixed(1)
     : 0;
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-  const recentCount = symptoms.filter((s: any) => new Date(s.date).getTime() > thirtyDaysAgo).length;
+  const recentCount = symptoms.filter(
+    (s: any) => new Date(s.date).getTime() > thirtyDaysAgo,
+  ).length;
 
   const handleAdd = async () => {
     if (!form.name.trim()) return;
     await addSymptom({ variables: form });
-    setForm({ name: '', severity: 5, notes: '' });
+    setForm({ name: "", severity: 5, notes: "" });
     setShowModal(false);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
   };
 
   return (
     <div>
       <header>
         <div>
-          <div>S</div>
           <div>
             <div>Symptom Tracker</div>
             <div>Welcome back!</div>
           </div>
         </div>
-        <button>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
       </header>
 
       <main>
         <div>
           <StatsCard title="Total Symptoms" value={symptoms.length} icon="⚡" />
-          <StatsCard title="Average Severity" value={`${avgSeverity}/10`} icon="📈" />
+          <StatsCard
+            title="Average Severity"
+            value={`${avgSeverity}/10`}
+            icon="📈"
+          />
           <StatsCard title="Last 30 Days" value={recentCount} icon="📅" />
         </div>
 
@@ -65,7 +81,9 @@ export default function Dashboard() {
             <div>
               <h3>No symptoms tracked yet</h3>
               <p>Start tracking your symptoms to see insights</p>
-              <button onClick={() => setShowModal(true)}>+ Add Your First Symptom</button>
+              <button onClick={() => setShowModal(true)}>
+                + Add Your First Symptom
+              </button>
             </div>
           ) : (
             <div>
@@ -73,7 +91,7 @@ export default function Dashboard() {
                 <SymptomCard
                   key={s._id}
                   symptom={s}
-                  onDelete={(id) => deleteSymptom({ variables: { id } })}
+                  onDelete={id => deleteSymptom({ variables: { id } })}
                 />
               ))}
             </div>
@@ -97,9 +115,13 @@ export default function Dashboard() {
               <div>
                 <label>Severity: {form.severity}/10</label>
                 <input
-                  type="range" min={1} max={10}
+                  type="range"
+                  min={1}
+                  max={10}
                   value={form.severity}
-                  onChange={e => setForm({ ...form, severity: Number(e.target.value) })}
+                  onChange={e =>
+                    setForm({ ...form, severity: Number(e.target.value) })
+                  }
                 />
               </div>
               <div>
