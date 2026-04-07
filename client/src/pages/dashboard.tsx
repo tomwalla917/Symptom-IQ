@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: "", severity: 5, notes: "" });
+  const [form, setForm] = useState({ name: "", severity: 5, triggers: "", notes: "", date: "" });
 
   const { data, loading } = useQuery(GET_SYMPTOMS);
   const [addSymptom] = useMutation(ADD_SYMPTOM, {
@@ -32,7 +32,7 @@ export default function Dashboard() {
   const handleAdd = async () => {
     if (!form.name.trim()) return;
     await addSymptom({ variables: form });
-    setForm({ name: "", severity: 5, notes: "" });
+    setForm({ name: "", severity: 5, triggers: "", notes: "", date: "" });
     setShowModal(false);
   };
 
@@ -44,71 +44,93 @@ export default function Dashboard() {
   };
 
   return (
-    <div>
-      <header>
-        <div>
+    <div className="min-vh-100 bg-dark">
+      {/* Header */}
+      <header className="navbar navbar-dark bg-primary px-4 shadow-sm">
+        <div className="d-flex align-items-center gap-3">
           <div>
-            <div>Symptom Tracker</div>
-            <div>Welcome back!</div>
+            <div className="navbar-brand mb-0 fw-bold">Symptom Tracker</div>
+            <div className="text-white-50 small">Welcome back!</div>
           </div>
         </div>
-        <button onClick={handleLogout}>Logout</button>
+        <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+          Logout
+        </button>
       </header>
 
-      <main>
-        <div>
-          <StatsCard title="Total Symptoms" value={symptoms.length} icon="⚡" />
-          <StatsCard
-            title="Average Severity"
-            value={`${avgSeverity}/10`}
-            icon="📈"
-          />
-          <StatsCard title="Last 30 Days" value={recentCount} icon="📅" />
+      <main className="container py-4">
+        {/* Stats Row */}
+        <div className="row g-3 mb-4">
+          <div className="col-12 col-md-4">
+            <StatsCard title="Total Symptoms" value={symptoms.length} icon="⚡" />
+          </div>
+          <div className="col-12 col-md-4">
+            <StatsCard title="Average Severity" value={`${avgSeverity}/10`} icon="📈" />
+          </div>
+          <div className="col-12 col-md-4">
+            <StatsCard title="Last 30 Days" value={recentCount} icon="📅" />
+          </div>
         </div>
 
-        <div>
-          <div>
+        {/* Symptoms Panel */}
+        <div className="card shadow-sm">
+          <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
             <div>
-              <h2>Your Symptoms</h2>
-              <p>Track and manage your health symptoms</p>
+              <h2 className="navbar-brand mb-0 fw-bold">Your Symptoms</h2>
+              <p className="text-white-50 small">Track and manage your health symptoms</p>
             </div>
-            <button onClick={() => setShowModal(true)}>+ Add Symptom</button>
+            <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
+              + Add Symptom
+            </button>
           </div>
 
-          {loading ? (
-            <p>Loading...</p>
-          ) : symptoms.length === 0 ? (
-            <div>
-              <h3>No symptoms tracked yet</h3>
-              <p>Start tracking your symptoms to see insights</p>
-              <button onClick={() => setShowModal(true)}>
-                + Add Your First Symptom
-              </button>
-            </div>
-          ) : (
-            <div>
-              {symptoms.map((s: any) => (
-                <SymptomCard
-                  key={s._id}
-                  symptom={s}
-                  onDelete={id => deleteSymptom({ variables: { id } })}
-                />
-              ))}
-            </div>
-          )}
+          <div className="card-body">
+            {loading ? (
+              <div className="text-center py-4">
+                <div className="spinner-border text-primary" role="status" />
+              </div>
+            ) : symptoms.length === 0 ? (
+              <div className="text-center py-5">
+                <h2 className="text-white-50 fw-bold">No symptoms tracked yet</h2>
+                <p className="text-white-50 small">Start tracking your symptoms to see insights</p>
+                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                  + Add Your First Symptom
+                </button>
+              </div>
+            ) : (
+              <div className="row g-3">
+                {symptoms.map((s: any) => (
+                  <div className="col-12 col-md-6 col-lg-4" key={s._id}>
+                    <SymptomCard
+                      symptom={s}
+                      onDelete={id => deleteSymptom({ variables: { id } })}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
 
+      {/* Modal */}
       {showModal && (
-        <div>
-          <div>
-            <h2>Add Symptom</h2>
-            <div>
-              <div>
-                <label>Symptom Name</label>
-                <select
-                  value={form.name}
-                  onChange={e => setForm({ ...form, name: e.target.value })}
+        <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title h5">Add New Symptom</h2>
+                <button className="btn-close" onClick={() => setShowModal(false)} />
+              </div>
+
+              <div className="modal-body">
+                {/* Symptom Name */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Symptom Name</label>
+                  <select
+                    className="form-select"
+                    value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })}
                   >
                     <option value="">Select a symptom</option>
                     <option value="Headache">Headache</option>
@@ -123,31 +145,70 @@ export default function Dashboard() {
                     <option value="Abdominal Pain">Abdominal Pain</option>
                     <option value="Back Pain">Back Pain</option>
                   </select>
+                </div>
+
+                {/* Severity */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">
+                    Severity: <span className="text-primary">{form.severity}/10</span>
+                  </label>
+                  <input
+                    type="range"
+                    className="form-range"
+                    min={1}
+                    max={10}
+                    value={form.severity}
+                    onChange={e => setForm({ ...form, severity: Number(e.target.value) })}
+                  />
+                  <div className="d-flex justify-content-between text-muted small">
+                    <span>Mild (1)</span>
+                    <span>Severe (10)</span>
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={form.date}
+                    onChange={e => setForm({ ...form, date: e.target.value })}
+                  />
+                </div>
+
+                {/* Possible Triggers */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Possible Triggers</label>
+                  <textarea
+                    className="form-control"
+                    value={form.triggers}
+                    onChange={e => setForm({ ...form, triggers: e.target.value })}
+                    placeholder="e.g. stress, lack of sleep, certain foods..."
+                    rows={3}
+                  />
+                </div>
+
+                {/* Notes */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Notes</label>
+                  <textarea
+                    className="form-control"
+                    value={form.notes}
+                    onChange={e => setForm({ ...form, notes: e.target.value })}
+                    placeholder="Any additional details..."
+                    rows={3}
+                  />
+                </div>
               </div>
-              <div>
-                <label>Severity: {form.severity}/10</label>
-                <input
-                  type="range"
-                  min={1}
-                  max={10}
-                  value={form.severity}
-                  onChange={e =>
-                    setForm({ ...form, severity: Number(e.target.value) })
-                  }
-                />
-              </div>
-              <div>
-                <label>Notes (optional)</label>
-                <textarea
-                  value={form.notes}
-                  onChange={e => setForm({ ...form, notes: e.target.value })}
-                  placeholder="Any additional details..."
-                  rows={3}
-                />
-              </div>
-              <div>
-                <button onClick={() => setShowModal(false)}>Cancel</button>
-                <button onClick={handleAdd}>Add Symptom</button>
+
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-primary" onClick={handleAdd}>
+                  Add Symptom
+                </button>
               </div>
             </div>
           </div>

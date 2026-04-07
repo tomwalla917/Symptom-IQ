@@ -1,3 +1,5 @@
+
+
 body {
   font-family: 'Rubik', sans-serif;
 }
@@ -14,4 +16,280 @@ h6 {
 .small {
   font-weight: 300;
   font-style: italic;
+}
+
+/* ── Color Variables ── */
+:root {
+  /* Base */
+  --clr-dark-a0: #000000;
+  --clr-light-a0: #ffffff;
+
+  /* Primary */
+  --clr-primary-a0: #27c6cc;
+  --clr-primary-a10: #52cdd2;
+  --clr-primary-a20: #6fd3d7;
+  --clr-primary-a30: #87dadd;
+  --clr-primary-a40: #9de0e2;
+  --clr-primary-a50: #b2e6e8;
+
+  /* Surface */
+  --clr-surface-a0: #121212;
+  --clr-surface-a10: #282828;
+  --clr-surface-a20: #3f3f3f;
+  --clr-surface-a30: #575757;
+  --clr-surface-a40: #717171;
+  --clr-surface-a50: #8b8b8b;
+
+  /* Tonal Surface */
+  --clr-surface-tonal-a0: #192222;
+  --clr-surface-tonal-a10: #2e3737;
+  --clr-surface-tonal-a20: #454d4c;
+  --clr-surface-tonal-a30: #5d6463;
+  --clr-surface-tonal-a40: #767c7b;
+  --clr-surface-tonal-a50: #8f9494;
+
+  /* Success */
+  --clr-success-a0: #22946e;
+  --clr-success-a10: #47d5a6;
+  --clr-success-a20: #9ae8ce;
+
+  /* Warning */
+  --clr-warning-a0: #a87a2a;
+  --clr-warning-a10: #d7ac61;
+  --clr-warning-a20: #ecd7b2;
+
+  /* Danger */
+  --clr-danger-a0: #9c2121;
+  --clr-danger-a10: #d94a4a;
+  --clr-danger-a20: #eb9e9e;
+
+  /* Info */
+  --clr-info-a0: #21498a;
+  --clr-info-a10: #4077d1;
+  --clr-info-a20: #92b2e5;
+}
+
+/* ── Global ── */
+body {
+  background-color: var(--clr-surface-a0);
+  color: var(--clr-primary-a50);
+}
+
+/* ── Bootstrap Overrides ── */
+
+/* Navbar */
+.navbar.bg-primary {
+  background-color: var(--clr-surface-tonal-a0) !important;
+  border-bottom: 1px solid var(--clr-primary-a0);
+}
+
+.navbar-brand {
+  color: var(--clr-primary-a0) !important;
+}
+
+.text-white-50 {
+  color: var(--clr-primary-a40) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--clr-primary-a0);
+  border-color: var(--clr-primary-a0);
+  color: var(--clr-surface-a0);
+}
+
+.btn-primary:hover {
+  background-color: var(--clr-primary-a10);
+  border-color: var(--clr-primary-a10);
+  color: var(--clr-surface-a0);
+}
+
+.btn-outline-light {
+  border-color: var(--clr-primary-a30);
+  color: var(--clr-primary-a30);
+}
+
+.btn-outline-light:hover {
+  background-color: var(--clr-primary-a0);
+  color: var(--clr-surface-a0);
+}
+
+.btn-secondary {
+  background-color: var(--clr-surface-a20);
+  border-color: var(--clr-surface-a30);
+  color: var(--clr-primary-a50);
+}
+
+.btn-secondary:hover {
+  background-color: var(--clr-surface-a30);
+  border-color: var(--clr-surface-a40);
+  color: var(--clr-primary-a50);
+}
+
+/* Cards */
+.card {
+  background-color: var(--clr-surface-tonal-a0);
+  border: 1px solid var(--clr-surface-tonal-a10);
+  color: var(--clr-primary-a50);
+}
+
+.card-header.bg-white {
+  background-color: var(--clr-surface-tonal-a10) !important;
+  border-bottom: 1px solid var(--clr-surface-tonal-a20);
+  color: var(--clr-primary-a40);
+}
+
+/* Modal */
+.modal-content {
+  background-color: var(--clr-surface-tonal-a0);
+  border: 1px solid var(--clr-surface-tonal-a20);
+  color: var(--clr-primary-a50);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--clr-surface-tonal-a20);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--clr-surface-tonal-a20);
+}
+
+.modal-title {
+  color: var(--clr-primary-a0);
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+  background-color: var(--clr-surface-a10);
+  border: 1px solid var(--clr-surface-tonal-a20);
+  color: var(--clr-primary-a50);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--clr-surface-a10);
+  border-color: var(--clr-primary-a0);
+  color: var(--clr-primary-a50);
+  box-shadow: 0 0 0 0.2rem rgba(39, 198, 204, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--clr-surface-a50);
+}
+
+.form-label {
+  color: var(--clr-primary-a30);
+}
+
+/* Range slider */
+.form-range::-webkit-slider-thumb {
+  background-color: var(--clr-primary-a0);
+}
+
+.form-range::-moz-range-thumb {
+  background-color: var(--clr-primary-a0);
+}
+
+/* Text helpers */
+.text-muted {
+  color: var(--clr-surface-a50) !important;
+}
+
+.text-primary {
+  color: var(--clr-primary-a0) !important;
+}
+
+/* Spinner */
+.spinner-border.text-primary {
+  color: var(--clr-primary-a0) !important;
+}
+
+/* Status colors */
+.text-success { color: var(--clr-success-a10) !important; }
+.text-warning { color: var(--clr-warning-a10) !important; }
+.text-danger  { color: var(--clr-danger-a10)  !important; }
+.text-info    { color: var(--clr-info-a10)    !important; }
+
+.bg-success { background-color: var(--clr-success-a0) !important; }
+.bg-warning { background-color: var(--clr-warning-a0) !important; }
+.bg-danger  { background-color: var(--clr-danger-a0)  !important; }
+.bg-info    { background-color: var(--clr-info-a0)    !important; }
+
+/* ── Dark background fix ── */
+body, #root {
+  background-color: var(--clr-surface-a0) !important;
+  color: var(--clr-primary-a50);
+}
+
+/* Modal backdrop & content */
+.modal-content {
+  background-color: var(--clr-surface-tonal-a0) !important;
+  color: var(--clr-primary-a50) !important;
+  border: 1px solid var(--clr-surface-tonal-a20);
+}
+
+.modal-header {
+  background-color: var(--clr-surface-tonal-a10) !important;
+  border-bottom: 1px solid var(--clr-surface-tonal-a20) !important;
+}
+
+.modal-body {
+  background-color: var(--clr-surface-tonal-a0) !important;
+}
+
+.modal-footer {
+  background-color: var(--clr-surface-tonal-a10) !important;
+  border-top: 1px solid var(--clr-surface-tonal-a20) !important;
+}
+
+/* Form fields */
+.form-control,
+.form-select {
+  background-color: var(--clr-surface-a10) !important;
+  border: 1px solid var(--clr-surface-tonal-a30) !important;
+  color: var(--clr-primary-a40) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--clr-surface-a10) !important;
+  border-color: var(--clr-primary-a0) !important;
+  color: var(--clr-primary-a40) !important;
+  box-shadow: 0 0 0 0.2rem rgba(39, 198, 204, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: var(--clr-surface-a50) !important;
+}
+
+/* Date input calendar icon color fix */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* Select dropdown options */
+select option {
+  background-color: var(--clr-surface-a10);
+  color: var(--clr-primary-a40);
+}
+
+/* Card & card-header */
+.card {
+  background-color: var(--clr-surface-tonal-a0) !important;
+  border: 1px solid var(--clr-surface-tonal-a20) !important;
+}
+
+.card-header {
+  background-color: var(--clr-surface-tonal-a10) !important;
+  border-bottom: 1px solid var(--clr-surface-tonal-a20) !important;
+  color: var(--clr-primary-a40) !important;
+}
+
+.card-body {
+  background-color: var(--clr-surface-tonal-a0) !important;
 }
