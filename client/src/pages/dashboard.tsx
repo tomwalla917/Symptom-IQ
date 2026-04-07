@@ -106,11 +106,23 @@ export default function Dashboard() {
             <div>
               <div>
                 <label>Symptom Name</label>
-                <input
+                <select
                   value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
-                  placeholder="e.g. Headache"
-                />
+                  >
+                    <option value="">Select a symptom</option>
+                    <option value="Headache">Headache</option>
+                    <option value="Fatigue">Fatigue</option>
+                    <option value="Nausea">Nausea</option>
+                    <option value="Dizziness">Dizziness</option>
+                    <option value="Fever">Fever</option>
+                    <option value="Cough">Cough</option>
+                    <option value="Sore Throat">Sore Throat</option>
+                    <option value="Shortness of Breath">Shortness of Breath</option>
+                    <option value="Chest Pain">Chest Pain</option>
+                    <option value="Abdominal Pain">Abdominal Pain</option>
+                    <option value="Back Pain">Back Pain</option>
+                  </select>
               </div>
               <div>
                 <label>Severity: {form.severity}/10</label>
