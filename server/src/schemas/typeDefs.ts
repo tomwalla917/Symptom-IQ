@@ -7,12 +7,12 @@ const typeDefs = gql`
     email: String!
   }
 
-  type Symptom {
+    type Symptom {
     _id: ID!
     userId: ID!
-    symptomType: String!
+    name: String!
     severity: Int!
-    duration: String!
+    date: String
     possibleTrigger: String
     notes: String
     createdAt: String
@@ -30,24 +30,20 @@ const typeDefs = gql`
 
   type Mutation {
     addSymptom(
-      userId: ID!
-      symptomType: String!
+      name: String!
       severity: Int!
-      duration: String!
+      date: String
       possibleTrigger: String
       notes: String
-      createdAt: String
     ): Symptom
 
     updateSymptom(
-      userId: ID!
       id: ID!
-      symptomType: String
+      name: String
       severity: Int
-      duration: String
+      date: String
       possibleTrigger: String
       notes: String
-      createdAt: String
     ): Symptom
 
     deleteSymptom(id: ID!): Symptom

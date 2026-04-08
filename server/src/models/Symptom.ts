@@ -2,9 +2,20 @@ import { Schema, model } from 'mongoose';
 
 export interface ISymptom extends Document{
   userId: Schema.Types.ObjectId;
-  symptomType: Schema.Types.ObjectId;
+  name: string;
   severity: number;
   duration: string;
+  date: Date;
+  possibleTrigger: string;
+  notes: string;
+  createdAt: Date;
+}
+
+export interface ISymptom extends Document {
+  userId: Schema.Types.ObjectId;
+  name: string;          // was symptomType ObjectId — simplify to string to match frontend dropdown
+  severity: number;
+  date: Date;            // new
   possibleTrigger: string;
   notes: string;
   createdAt: Date;
@@ -17,34 +28,30 @@ const symptomSchema = new Schema<ISymptom>(
       ref: 'User',
       required: true,
     },
-    symptomType: {
-      type: Schema.Types.ObjectId,
-      ref: 'SymptomType',
+    name: {
+      type: String,
       required: true,
     },
     severity: {
       type: Number,
       required: true,
-      min: 1, 
+      min: 1,
       max: 10,
     },
-    duration: {
-      type: String, 
-      required: true,
+    date: {
+      type: Date,
+      required: false,
     },
     possibleTrigger: {
       type: String,
-      required: false, 
+      required: false,
     },
     notes: {
-      type: String, 
-      required: true, 
+      type: String,
+      required: false,
     },
-
-},
-  {
-    timestamps: true,
-  }
+  },
+  { timestamps: true }
 );
 
 const Symptom = model<ISymptom>('Symptom', symptomSchema);
