@@ -1,7 +1,5 @@
-
-
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 h1,
@@ -10,7 +8,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Rubik Mono One', sans-serif;
+  font-family: "Rubik Mono One", sans-serif;
 }
 
 .small {
@@ -210,18 +208,35 @@ body {
 }
 
 /* Status colors */
-.text-success { color: var(--clr-success-a10) !important; }
-.text-warning { color: var(--clr-warning-a10) !important; }
-.text-danger  { color: var(--clr-danger-a10)  !important; }
-.text-info    { color: var(--clr-info-a10)    !important; }
+.text-success {
+  color: var(--clr-success-a10) !important;
+}
+.text-warning {
+  color: var(--clr-warning-a10) !important;
+}
+.text-danger {
+  color: var(--clr-danger-a10) !important;
+}
+.text-info {
+  color: var(--clr-info-a10) !important;
+}
 
-.bg-success { background-color: var(--clr-success-a0) !important; }
-.bg-warning { background-color: var(--clr-warning-a0) !important; }
-.bg-danger  { background-color: var(--clr-danger-a0)  !important; }
-.bg-info    { background-color: var(--clr-info-a0)    !important; }
+.bg-success {
+  background-color: var(--clr-success-a0) !important;
+}
+.bg-warning {
+  background-color: var(--clr-warning-a0) !important;
+}
+.bg-danger {
+  background-color: var(--clr-danger-a0) !important;
+}
+.bg-info {
+  background-color: var(--clr-info-a0) !important;
+}
 
 /* ── Dark background fix ── */
-body, #root {
+body,
+#root {
   background-color: var(--clr-surface-a0) !important;
   color: var(--clr-primary-a50);
 }
@@ -292,4 +307,9 @@ select option {
 
 .card-body {
   background-color: var(--clr-surface-tonal-a0) !important;
+}
+
+.auth-card {
+  padding: 5%;
+  text-align: center;
 }
