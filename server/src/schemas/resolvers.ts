@@ -5,7 +5,7 @@ import { signToken } from "../utils/auth";
 
 const resolvers = {
   Query: {
-    getSymptom: async (_: any, __: any, context: any) => {
+    getSymptoms: async (_: any, __: any, context: any) => {
       if (!context.user) throw new GraphQLError("must be logged in");
 
       return await Symptom.find({ userId: context.user._id });
