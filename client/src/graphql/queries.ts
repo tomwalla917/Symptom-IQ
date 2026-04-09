@@ -14,7 +14,7 @@ export const GET_SYMPTOMS = gql`
   query getSymptoms {
     getSymptoms {
       _id
-      symptomType
+      name
       severity
       createdAt
     }
@@ -26,9 +26,9 @@ export const GET_SYMPTOM = gql`
     getSymptom(id: $id) {
       _id
       userId
-      symptomType
+      name
       severity
-      duration
+      date
       possibleTrigger
       notes
       createdAt
@@ -66,10 +66,9 @@ export const DELETE_SYMPTOM = gql`
   mutation deleteSymptom($id: ID!) {
     deleteSymptom(id: $id) {
       _id
-      userId
-      symptomType
+      name
       severity
-      duration
+      date
       possibleTrigger
       notes
       createdAt
@@ -79,26 +78,23 @@ export const DELETE_SYMPTOM = gql`
 
 export const ADD_SYMPTOM = gql`
   mutation addSymptom(
-    $userId: ID!
-    $symptomType: String!
+    $name: String!
     $severity: Int!
-    $duration: String!
+    $date: String
     $possibleTrigger: String
     $notes: String
   ) {
     addSymptom(
-      userId: $userId
-      symptomType: $symptomType
+      name: $name
       severity: $severity
-      duration: $duration
+      date: $date
       possibleTrigger: $possibleTrigger
       notes: $notes
     ) {
       _id
-      userId
-      symptomType
+      name
       severity
-      duration
+      date
       possibleTrigger
       notes
       createdAt
@@ -109,27 +105,24 @@ export const ADD_SYMPTOM = gql`
 export const UPDATE_SYMPTOM = gql`
   mutation updateSymptom(
     $id: ID!
-    $userId: ID!
-    $symptomType: String!
-    $severity: Int!
-    $duration: String!
+    $name: String
+    $severity: Int
+    $date: String
     $possibleTrigger: String
     $notes: String
   ) {
     updateSymptom(
       id: $id
-      userId: $userId
-      symptomType: $symptomType
+      name: $name
       severity: $severity
-      duration: $duration
+      date: $date
       possibleTrigger: $possibleTrigger
       notes: $notes
     ) {
       _id
-      userId
-      symptomType
+      name
       severity
-      duration
+      date
       possibleTrigger
       notes
       createdAt
