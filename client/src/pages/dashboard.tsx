@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: "", severity: 5, triggers: "", notes: "", date: "" });
+  const [form, setForm] = useState({ name: "", severity: 5, possibleTrigger: "", notes: "", date: "" });
 
   const { data, loading } = useQuery(GET_SYMPTOMS);
   const [addSymptom] = useMutation(ADD_SYMPTOM, {
@@ -17,7 +17,7 @@ export default function Dashboard() {
     refetchQueries: [{ query: GET_SYMPTOMS }],
   });
 
-  const symptoms = data?.symptoms ?? [];
+  const symptoms = data?.getSymptoms ?? [];
   const avgSeverity = symptoms.length
     ? (
         symptoms.reduce((sum: number, s: any) => sum + s.severity, 0) /
@@ -183,7 +183,7 @@ export default function Dashboard() {
                   <textarea
                     className="form-control"
                     value={form.triggers}
-                    onChange={e => setForm({ ...form, triggers: e.target.value })}
+                    onChange={e => setForm({ ...form, possibleTrigger: e.target.value })}
                     placeholder="e.g. stress, lack of sleep, certain foods..."
                     rows={3}
                   />
