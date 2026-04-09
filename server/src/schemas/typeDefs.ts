@@ -13,6 +13,7 @@ const typeDefs = gql`
     name: String!
     severity: Int!
     date: String
+    duration: String
     possibleTrigger: String
     notes: String
     createdAt: String
@@ -33,6 +34,7 @@ const typeDefs = gql`
       name: String!
       severity: Int!
       date: String
+      duration: String
       possibleTrigger: String
       notes: String
     ): Symptom
@@ -42,6 +44,7 @@ const typeDefs = gql`
       name: String
       severity: Int
       date: String
+      duration: String
       possibleTrigger: String
       notes: String
     ): Symptom

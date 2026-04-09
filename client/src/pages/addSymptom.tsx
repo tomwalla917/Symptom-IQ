@@ -12,11 +12,11 @@ function AddSymptom() {
   const [notes, setNotes] = useState("");
 
   const symptomOptions = [
-    { label: "Headache", value: "1" },
-    { label: "Fatigue",  value: "2" },
-    { label: "Nausea",   value: "3" },
-    { label: "Fever",    value: "4" },
-    { label: "Cough",    value: "5" },
+    { label: "Headache", value: "Headache" },
+    { label: "Fatigue",  value: "Fatigue" },
+    { label: "Nausea",   value: "Nausea" },
+    { label: "Fever",    value: "Fever" },
+    { label: "Cough",    value: "Cough" },
   ];
 
   function handleSymptomChange(e: ChangeEvent<HTMLSelectElement>) {

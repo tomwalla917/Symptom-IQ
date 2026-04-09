@@ -13,9 +13,9 @@ export interface ISymptom extends Document{
 
 export interface ISymptom extends Document {
   userId: Schema.Types.ObjectId;
-  name: string;          // was symptomType ObjectId — simplify to string to match frontend dropdown
+  name: string;          
   severity: number;
-  date: Date;            // new
+  date: Date;            
   possibleTrigger: string;
   notes: string;
   createdAt: Date;
