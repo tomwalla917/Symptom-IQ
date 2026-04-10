@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useLazyQuery } from "@apollo/client/react";
-import { GET_SYMPTOM } from "../graphql/queries";
+import { useMutation } from "@apollo/client/react";
+import { UPDATE_SYMPTOM, DELETE_SYMPTOM } from "../graphql/queries";
 
 interface Symptom {
   _id: string;
@@ -15,57 +15,68 @@ interface Symptom {
 interface Props {
   symptom: Symptom;
   onDelete: (id: string) => void;
+  onUpdate?: (updated: Symptom) => void;
 }
 
 const getSeverityConfig = (severity: number) => {
-  if (severity <= 3) return { color: "var(--clr-success-a10)", label: "Mild", bg: "var(--clr-success-a0)" };
-  if (severity <= 6) return { color: "var(--clr-warning-a10)", label: "Moderate", bg: "var(--clr-warning-a0)" };
-  return { color: "var(--clr-danger-a10)", label: "Severe", bg: "var(--clr-danger-a0)" };
+  if (severity <= 3) return { color: "var(--clr-success-a10)", label: "Mild" };
+  if (severity <= 6) return { color: "var(--clr-warning-a10)", label: "Moderate" };
+  return { color: "var(--clr-danger-a10)", label: "Severe" };
 };
 
-const DetailRow = ({ icon, label, value }: { icon: string; label: string; value: string }) => (
-  <div style={{
-    display: "flex", flexDirection: "column", gap: "0.25rem",
-    padding: "0.75rem", backgroundColor: "var(--clr-surface-tonal-a10)",
-    borderRadius: "6px", border: "1px solid var(--clr-surface-tonal-a20)",
-  }}>
-    <span style={{ fontSize: "0.7rem", color: "var(--clr-surface-a50)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-      {icon} {label}
-    </span>
-    <span style={{ fontSize: "0.9rem", color: "var(--clr-primary-a40)" }}>{value}</span>
-  </div>
-);
+const parseDate = (val?: string) => {
+  if (!val) return null;
+  const asNum = Number(val);
+  const d = isNaN(asNum) ? new Date(val) : new Date(asNum);
+  return isNaN(d.getTime()) ? null : d;
+};
 
-const SymptomCard = ({ symptom, onDelete }: Props) => {
+const SymptomCard = ({ symptom, onDelete, onUpdate }: Props) => {
   const [showModal, setShowModal] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState({ ...symptom });
+
   const sev = getSeverityConfig(symptom.severity);
+  const draftSev = getSeverityConfig(draft.severity);
 
-  const [fetchSymptom, { data, loading }] = useLazyQuery(GET_SYMPTOM);
+  const [updateSymptom, { loading: updating }] = useMutation(UPDATE_SYMPTOM);
 
-  const handleCardClick = () => {
-    setShowModal(true);
-    fetchSymptom({ variables: { id: symptom._id } });
+  const handleSave = async () => {
+    await updateSymptom({ variables: { id: symptom._id, ...draft } });
+    onUpdate?.({ ...symptom, ...draft });
+    setEditing(false);
   };
 
-  const detail = data?.getSymptom;
+  const handleClose = () => {
+    setShowModal(false);
+    setEditing(false);
+    setDraft({ ...symptom });
+  };
+
+  const field = (label: string, value: string) => (
+    <div style={{
+      display: "flex", flexDirection: "column", gap: "0.25rem",
+      padding: "0.75rem", backgroundColor: "var(--clr-surface-tonal-a10)",
+      borderRadius: "6px", border: "1px solid var(--clr-surface-tonal-a20)",
+    }}>
+      <span style={{ fontSize: "0.7rem", color: "var(--clr-surface-a50)",
+        textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
+      <span style={{ fontSize: "0.9rem", color: "var(--clr-primary-a40)" }}>{value}</span>
+    </div>
+  );
 
   return (
     <>
-      {/* Card */}
+      {/* ── Card ── */}
       <div
-        onClick={handleCardClick}
+        onClick={() => setShowModal(true)}
         style={{
           backgroundColor: "var(--clr-surface-tonal-a10)",
           border: "1px solid var(--clr-surface-tonal-a20)",
           borderLeft: `4px solid ${sev.color}`,
-          borderRadius: "8px",
-          padding: "1.25rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.75rem",
-          height: "100%",
-          cursor: "pointer",
-          transition: "background-color 0.2s ease, transform 0.2s ease",
+          borderRadius: "8px", padding: "1.25rem",
+          display: "flex", flexDirection: "column", gap: "0.75rem",
+          cursor: "pointer", transition: "background-color 0.2s ease, transform 0.2s ease",
         }}
         onMouseEnter={e => {
           (e.currentTarget as HTMLDivElement).style.backgroundColor = "var(--clr-surface-tonal-a20)";
@@ -76,61 +87,34 @@ const SymptomCard = ({ symptom, onDelete }: Props) => {
           (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
         }}
       >
-        {/* Header row */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <h5 style={{ color: "var(--clr-primary-a0)", fontFamily: "Rubik Mono One, sans-serif", margin: 0, fontSize: "1rem" }}>
+          <h5 style={{ color: "var(--clr-primary-a0)", fontFamily: "Rubik Mono One, sans-serif", margin: 0 }}>
             {symptom.name}
           </h5>
-          <div style={{
-            backgroundColor: sev.bg, color: sev.color, borderRadius: "20px",
-            padding: "2px 10px", fontSize: "0.75rem", fontWeight: 600,
-            whiteSpace: "nowrap", marginLeft: "0.5rem",
-          }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: sev.color, marginLeft: "0.5rem" }}>
             {symptom.severity}/10 — {sev.label}
-          </div>
+          </span>
         </div>
 
-        {/* Severity bar */}
         <div style={{ height: "4px", backgroundColor: "var(--clr-surface-a20)", borderRadius: "2px", overflow: "hidden" }}>
-          <div style={{
-            height: "100%", width: `${symptom.severity * 10}%`,
-            backgroundColor: sev.color, borderRadius: "2px", transition: "width 0.3s ease",
-          }} />
+          <div style={{ height: "100%", width: `${symptom.severity * 10}%`,
+            backgroundColor: sev.color, borderRadius: "2px" }} />
         </div>
 
-        {/* Meta info */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", flex: 1 }}>
-          {symptom.date && (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", color: "var(--clr-surface-a50)" }}>
-              <span>📅</span>
-              <span>{new Date(symptom.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
-            </div>
-          )}
-          {symptom.possibleTrigger && (
-            <div style={{ fontSize: "0.8rem", color: "var(--clr-primary-a40)" }}>
-              <span style={{ color: "var(--clr-warning-a10)", marginRight: "0.4rem" }}>⚡</span>
-              <strong style={{ color: "var(--clr-primary-a30)" }}>Trigger: </strong>
-              {symptom.possibleTrigger}
-            </div>
-          )}
-          {symptom.notes && (
-            <div style={{ fontSize: "0.8rem", color: "var(--clr-primary-a40)", fontStyle: "italic" }}>
-              <span style={{ marginRight: "0.4rem" }}>📝</span>
-              {symptom.notes}
-            </div>
-          )}
-        </div>
-
-        {/* Click hint */}
-        <div style={{ fontSize: "0.7rem", color: "var(--clr-surface-a40)", textAlign: "right" }}>
-          Click for details →
-        </div>
+        {(() => {
+          const d = parseDate(symptom.date);
+          return d ? (
+            <span style={{ fontSize: "0.8rem", color: "var(--clr-surface-a50)" }}>
+              📅 {d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+            </span>
+          ) : null;
+        })()}
       </div>
 
-      {/* Modal */}
+      {/* ── Modal ── */}
       {showModal && (
         <div
-          onClick={() => setShowModal(false)}
+          onClick={handleClose}
           style={{
             position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.7)",
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -143,15 +127,9 @@ const SymptomCard = ({ symptom, onDelete }: Props) => {
               backgroundColor: "var(--clr-surface-tonal-a0)",
               border: `1px solid var(--clr-surface-tonal-a20)`,
               borderTop: `3px solid ${sev.color}`,
-              borderRadius: "10px",
-              width: "100%",
-              maxWidth: "480px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              padding: "1.5rem",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
+              borderRadius: "10px", width: "100%", maxWidth: "480px",
+              maxHeight: "90vh", overflowY: "auto",
+              padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem",
             }}
           >
             {/* Modal header */}
@@ -159,57 +137,113 @@ const SymptomCard = ({ symptom, onDelete }: Props) => {
               <h4 style={{ color: "var(--clr-primary-a0)", fontFamily: "Rubik Mono One, sans-serif", margin: 0 }}>
                 {symptom.name}
               </h4>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{
-                  background: "none", border: "none", color: "var(--clr-surface-a50)",
-                  fontSize: "1.25rem", cursor: "pointer", lineHeight: 1,
-                }}
-              >✕</button>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <button
+                  onClick={() => setEditing(e => !e)}
+                  style={{
+                    background: "none", border: "1px solid var(--clr-primary-a0)",
+                    color: "var(--clr-primary-a0)", borderRadius: "6px",
+                    padding: "2px 10px", fontSize: "0.8rem", cursor: "pointer",
+                  }}
+                >
+                  {editing ? "Cancel" : "Edit"}
+                </button>
+                <button
+                  onClick={handleClose}
+                  style={{
+                    background: "none", border: "none", color: "var(--clr-surface-a50)",
+                    fontSize: "1.25rem", cursor: "pointer", lineHeight: 1,
+                  }}
+                >✕</button>
+              </div>
             </div>
 
-            {loading ? (
-              <div style={{ textAlign: "center", padding: "2rem" }}>
-                <div className="spinner-border text-primary" role="status" />
-              </div>
-            ) : detail ? (
+            {editing ? (
+              /* ── Edit mode ── */
               <>
-                {/* Severity bar in modal */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                  <div>
+                    <label className="form-label">
+                      Severity: {draft.severity}/10 — {draftSev.label}
+                    </label>
+                    <input
+                      type="range" className="form-range" min={1} max={10}
+                      value={draft.severity}
+                      onChange={e => setDraft(d => ({ ...d, severity: Number(e.target.value) }))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Date</label>
+                    <input
+                      type="date" className="form-control"
+                      value={draft.date ? (parseDate(draft.date)?.toISOString().slice(0, 10) ?? "") : ""}
+                      onChange={e => setDraft(d => ({ ...d, date: e.target.value }))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Possible Trigger</label>
+                    <input
+                      type="text" className="form-control"
+                      placeholder="e.g. stress, food, sleep"
+                      value={draft.possibleTrigger ?? ""}
+                      onChange={e => setDraft(d => ({ ...d, possibleTrigger: e.target.value }))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-label">Notes</label>
+                    <textarea
+                      className="form-control" rows={3}
+                      value={draft.notes ?? ""}
+                      onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSave}
+                  disabled={updating}
+                  className="btn btn-primary w-100"
+                >
+                  {updating ? "Saving..." : "Save Changes"}
+                </button>
+              </>
+            ) : (
+              /* ── Read mode ── */
+              <>
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--clr-surface-a50)", textTransform: "uppercase" }}>Severity</span>
-                    <span style={{ fontSize: "0.75rem", color: sev.color, fontWeight: 600 }}>{detail.severity}/10 — {sev.label}</span>
+                    <span style={{ fontSize: "0.75rem", color: "var(--clr-surface-a50)", textTransform: "uppercase" }}>
+                      Severity
+                    </span>
+                    <span style={{ fontSize: "0.75rem", color: sev.color, fontWeight: 600 }}>
+                      {symptom.severity}/10 — {sev.label}
+                    </span>
                   </div>
                   <div style={{ height: "6px", backgroundColor: "var(--clr-surface-a20)", borderRadius: "3px", overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${detail.severity * 10}%`, backgroundColor: sev.color, borderRadius: "3px" }} />
+                    <div style={{ height: "100%", width: `${symptom.severity * 10}%`,
+                      backgroundColor: sev.color, borderRadius: "3px" }} />
                   </div>
                 </div>
 
-                {/* Detail fields */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  {detail.date && (
-                    <DetailRow icon="📅" label="Date" value={new Date(detail.date).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })} />
-                  )}
-                  {detail.possibleTrigger && (
-                    <DetailRow icon="⚡" label="Possible Trigger" value={detail.possibleTrigger} />
-                  )}
-                  {detail.notes && (
-                    <DetailRow icon="📝" label="Notes" value={detail.notes} />
-                  )}
-                  {detail.createdAt && (
-                    <DetailRow icon="🕐" label="Logged At" value={new Date(Number(detail.createdAt)).toLocaleString()} />
-                  )}
+                  {(() => {
+                    const d = parseDate(symptom.date);
+                    return d ? field("📅 Date", d.toLocaleDateString("en-US", {
+                      weekday: "long", year: "numeric", month: "long", day: "numeric",
+                    })) : null;
+                  })()}
+                  {symptom.possibleTrigger && field("⚡ Possible Trigger", symptom.possibleTrigger)}
+                  {symptom.notes && field("📝 Notes", symptom.notes)}
+                  {symptom.createdAt && field("🕐 Logged At", new Date(Number(symptom.createdAt)).toLocaleString())}
                 </div>
 
-                {/* Delete */}
                 <button
-                  onClick={() => { onDelete(symptom._id); setShowModal(false); }}
-                  style={{
-                    marginTop: "0.5rem", backgroundColor: "transparent",
-                    border: "1px solid var(--clr-danger-a0)", color: "var(--clr-danger-a10)",
-                    borderRadius: "6px", padding: "0.5rem", fontSize: "0.85rem",
-                    cursor: "pointer", width: "100%", transition: "all 0.2s ease",
-                  }}
+                  onClick={() => { onDelete(symptom._id); handleClose(); }}
+                  className="btn w-100"
+                  style={{ border: "1px solid var(--clr-danger-a0)", color: "var(--clr-danger-a10)" }}
                   onMouseEnter={e => {
                     (e.target as HTMLButtonElement).style.backgroundColor = "var(--clr-danger-a0)";
                     (e.target as HTMLButtonElement).style.color = "var(--clr-light-a0)";
@@ -222,7 +256,7 @@ const SymptomCard = ({ symptom, onDelete }: Props) => {
                   Delete Symptom
                 </button>
               </>
-            ) : null}
+            )}
           </div>
         </div>
       )}
