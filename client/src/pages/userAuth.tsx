@@ -113,10 +113,11 @@ function UserAuth() {
         </div>
         {isLoginView ? (
           <form onSubmit={handleLogin}>
-            <div className="navbar-brand mb-0 fw-bold">
-              <h3>Login</h3>
-            </div>
-            <label className="form-label fw-semibold" htmlFor="login-email">
+            <label
+              className="form-label fw-semibold"
+              htmlFor="login-email"
+              style={{ marginTop: "2rem" }}
+            >
               Email
             </label>
             <input
@@ -131,7 +132,11 @@ function UserAuth() {
               disabled={loggingIn}
             />
 
-            <label className="form-label fw-semibold" htmlFor="login-password">
+            <label
+              className="form-label fw-semibold"
+              htmlFor="login-password"
+              style={{ margin: ".5rem" }}
+            >
               Password
             </label>
             <input
@@ -153,11 +158,12 @@ function UserAuth() {
               className="btn btn-primary btn-sm"
               type="submit"
               disabled={loggingIn}
+              style={{ marginTop: "2rem" }}
             >
               {loggingIn ? "Logging in..." : "Login"}
             </button>
 
-            <p className="text-white-50 small">
+            <p className="text-white-50 small" style={{ margin: ".5rem" }}>
               Don&apos;t have an account?{" "}
               <button
                 className="btn btn-outline-light btn-sm"
@@ -170,12 +176,10 @@ function UserAuth() {
           </form>
         ) : (
           <form onSubmit={handleRegister}>
-            <div className="navbar-brand mb-0 fw-bold">
-              <h3>Register</h3>
-            </div>
             <label
               className="form-label fw-semibold"
               htmlFor="register-username"
+              style={{ marginTop: "2rem" }}
             >
               Username
             </label>
@@ -193,7 +197,11 @@ function UserAuth() {
               disabled={registering}
             />
 
-            <label className="form-label fw-semibold" htmlFor="register-email">
+            <label
+              className="form-label fw-semibold"
+              htmlFor="register-email"
+              style={{ margin: ".5rem" }}
+            >
               Email
             </label>
             <input
@@ -214,6 +222,7 @@ function UserAuth() {
             <label
               className="form-label fw-semibold"
               htmlFor="register-password"
+              style={{ margin: ".5rem" }}
             >
               Password
             </label>
@@ -236,11 +245,12 @@ function UserAuth() {
               className="btn btn-primary btn-sm"
               type="submit"
               disabled={registering}
+              style={{ marginTop: "2rem" }}
             >
               {registering ? "Registering..." : "Register"}
             </button>
 
-            <p className="text-white-50 small">
+            <p className="text-white-50 small" style={{ marginTop: ".5rem" }}>
               Already have an account?{" "}
               <button
                 className="btn btn-outline-light btn-sm"
