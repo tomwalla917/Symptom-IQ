@@ -1,7 +1,7 @@
 import { GraphQLError } from "graphql";
-import Symptom from "../models/Symptom";
-import User from "../models/User";
-import { signToken } from "../utils/auth";
+import Symptom from "../models/Symptom.js";
+import User from "../models/User.js";
+import { signToken } from "../utils/auth.js";
 
 const resolvers = {
   Query: {
@@ -11,9 +11,9 @@ const resolvers = {
       return await Symptom.find({ userId: context.user._id });
     },
     getSymptom: async (_: any, { id }: any, context: any) => {
-    if (!context.user) throw new GraphQLError("must be logged in");
-    return await Symptom.findOne({ _id: id, userId: context.user._id });
-  },
+      if (!context.user) throw new GraphQLError("must be logged in");
+      return await Symptom.findOne({ _id: id, userId: context.user._id });
+    },
   },
   Mutation: {
     register: async (
