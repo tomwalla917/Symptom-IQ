@@ -16,6 +16,7 @@ export const GET_SYMPTOMS = gql`
       _id
       name
       severity
+      date
       createdAt
     }
   }

@@ -7,7 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: "", severity: 5, possibleTrigger: "", notes: "", date: "" });
+  const [form, setForm] = useState({
+    name: "",
+    severity: 5,
+    possibleTrigger: "",
+    notes: "",
+    date: "",
+  });
 
   const { data, loading } = useQuery(GET_SYMPTOMS);
   const [addSymptom] = useMutation(ADD_SYMPTOM, {
@@ -25,14 +31,27 @@ export default function Dashboard() {
       ).toFixed(1)
     : 0;
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-  const recentCount = symptoms.filter(
-    (s: any) => new Date(s.date).getTime() > thirtyDaysAgo,
-  ).length;
+
+  const recentCount = symptoms.filter((s: any) => {
+    if (!s.date) return false;
+
+    const symptomTime = Number(s.date);
+
+    if (Number.isNaN(symptomTime)) return false;
+
+    return symptomTime >= thirtyDaysAgo;
+  }).length;
 
   const handleAdd = async () => {
     if (!form.name.trim()) return;
     await addSymptom({ variables: form });
-    setForm({ name: "", severity: 5, triggers: "", notes: "", date: "" });
+    setForm({
+      name: "",
+      severity: 5,
+      possibleTrigger: "",
+      notes: "",
+      date: "",
+    });
     setShowModal(false);
   };
 
@@ -62,10 +81,18 @@ export default function Dashboard() {
         {/* Stats Row */}
         <div className="row g-3 mb-4">
           <div className="col-12 col-md-4">
-            <StatsCard title="Total Symptoms" value={symptoms.length} icon="⚡" />
+            <StatsCard
+              title="Total Symptoms"
+              value={symptoms.length}
+              icon="⚡"
+            />
           </div>
           <div className="col-12 col-md-4">
-            <StatsCard title="Average Severity" value={`${avgSeverity}/10`} icon="📈" />
+            <StatsCard
+              title="Average Severity"
+              value={`${avgSeverity}/10`}
+              icon="📈"
+            />
           </div>
           <div className="col-12 col-md-4">
             <StatsCard title="Last 30 Days" value={recentCount} icon="📅" />
@@ -77,9 +104,14 @@ export default function Dashboard() {
           <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
             <div>
               <h2 className="navbar-brand mb-0 fw-bold">Your Symptoms</h2>
-              <p className="text-white-50 small">Track and manage your health symptoms</p>
+              <p className="text-white-50 small">
+                Track and manage your health symptoms
+              </p>
             </div>
-            <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => setShowModal(true)}
+            >
               + Add Symptom
             </button>
           </div>
@@ -91,9 +123,16 @@ export default function Dashboard() {
               </div>
             ) : symptoms.length === 0 ? (
               <div className="text-center py-5">
-                <h2 className="text-white-50 fw-bold">No symptoms tracked yet</h2>
-                <p className="text-white-50 small">Start tracking your symptoms to see insights</p>
-                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+                <h2 className="text-white-50 fw-bold">
+                  No symptoms tracked yet
+                </h2>
+                <p className="text-white-50 small">
+                  Start tracking your symptoms to see insights
+                </p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowModal(true)}
+                >
                   + Add Your First Symptom
                 </button>
               </div>
@@ -115,12 +154,18 @@ export default function Dashboard() {
 
       {/* Modal */}
       {showModal && (
-        <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div
+          className="modal d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h2 className="modal-title h5">Add New Symptom</h2>
-                <button className="btn-close" onClick={() => setShowModal(false)} />
+                <button
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                />
               </div>
 
               <div className="modal-body">
@@ -140,7 +185,9 @@ export default function Dashboard() {
                     <option value="Fever">Fever</option>
                     <option value="Cough">Cough</option>
                     <option value="Sore Throat">Sore Throat</option>
-                    <option value="Shortness of Breath">Shortness of Breath</option>
+                    <option value="Shortness of Breath">
+                      Shortness of Breath
+                    </option>
                     <option value="Chest Pain">Chest Pain</option>
                     <option value="Abdominal Pain">Abdominal Pain</option>
                     <option value="Back Pain">Back Pain</option>
@@ -150,7 +197,8 @@ export default function Dashboard() {
                 {/* Severity */}
                 <div className="mb-3">
                   <label className="form-label fw-semibold">
-                    Severity: <span className="text-primary">{form.severity}/10</span>
+                    Severity:{" "}
+                    <span className="text-primary">{form.severity}/10</span>
                   </label>
                   <input
                     type="range"
@@ -158,7 +206,9 @@ export default function Dashboard() {
                     min={1}
                     max={10}
                     value={form.severity}
-                    onChange={e => setForm({ ...form, severity: Number(e.target.value) })}
+                    onChange={e =>
+                      setForm({ ...form, severity: Number(e.target.value) })
+                    }
                   />
                   <div className="d-flex justify-content-between text-muted small">
                     <span>Mild (1)</span>
@@ -179,11 +229,15 @@ export default function Dashboard() {
 
                 {/* Possible Triggers */}
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">Possible Triggers</label>
+                  <label className="form-label fw-semibold">
+                    Possible Triggers
+                  </label>
                   <textarea
                     className="form-control"
-                    value={form.triggers}
-                    onChange={e => setForm({ ...form, possibleTrigger: e.target.value })}
+                    value={form.possibleTrigger}
+                    onChange={e =>
+                      setForm({ ...form, possibleTrigger: e.target.value })
+                    }
                     placeholder="e.g. stress, lack of sleep, certain foods..."
                     rows={3}
                   />
@@ -203,7 +257,10 @@ export default function Dashboard() {
               </div>
 
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
                   Cancel
                 </button>
                 <button className="btn btn-primary" onClick={handleAdd}>

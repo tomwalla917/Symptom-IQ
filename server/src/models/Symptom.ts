@@ -1,21 +1,9 @@
-import { Schema, model } from 'mongoose';
-
-export interface ISymptom extends Document{
+import { Schema, model } from "mongoose";
+export interface ISymptom extends Document {
   userId: Schema.Types.ObjectId;
   name: string;
   severity: number;
-  duration: string;
   date: Date;
-  possibleTrigger: string;
-  notes: string;
-  createdAt: Date;
-}
-
-export interface ISymptom extends Document {
-  userId: Schema.Types.ObjectId;
-  name: string;          
-  severity: number;
-  date: Date;            
   possibleTrigger: string;
   notes: string;
   createdAt: Date;
@@ -25,7 +13,7 @@ const symptomSchema = new Schema<ISymptom>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     name: {
@@ -51,9 +39,9 @@ const symptomSchema = new Schema<ISymptom>(
       required: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Symptom = model<ISymptom>('Symptom', symptomSchema);
+const Symptom = model<ISymptom>("Symptom", symptomSchema);
 
 export default Symptom;
