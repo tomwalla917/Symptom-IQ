@@ -31,9 +31,16 @@ export default function Dashboard() {
       ).toFixed(1)
     : 0;
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-  const recentCount = symptoms.filter(
-    (s: any) => new Date(s.date).getTime() > thirtyDaysAgo,
-  ).length;
+
+  const recentCount = symptoms.filter((s: any) => {
+    if (!s.date) return false;
+
+    const symptomTime = Number(s.date);
+
+    if (Number.isNaN(symptomTime)) return false;
+
+    return symptomTime >= thirtyDaysAgo;
+  }).length;
 
   const handleAdd = async () => {
     if (!form.name.trim()) return;
