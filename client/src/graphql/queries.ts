@@ -17,6 +17,8 @@ export const GET_SYMPTOMS = gql`
       name
       severity
       date
+      possibleTrigger
+      notes
       createdAt
     }
   }
