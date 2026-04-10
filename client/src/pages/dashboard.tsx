@@ -82,20 +82,20 @@ export default function Dashboard() {
         <div className="row g-3 mb-4">
           <div className="col-12 col-md-4">
             <StatsCard
-              title="Total Symptoms"
+              title="Total Symptoms "
               value={symptoms.length}
-              icon="⚡"
+              icon=" ⚡"
             />
           </div>
           <div className="col-12 col-md-4">
             <StatsCard
-              title="Average Severity"
+              title="Average Severity "
               value={`${avgSeverity}/10`}
-              icon="📈"
+              icon=" 📈"
             />
           </div>
           <div className="col-12 col-md-4">
-            <StatsCard title="Last 30 Days" value={recentCount} icon="📅" />
+            <StatsCard title="Last 30 Days " value={recentCount} icon=" 📅" />
           </div>
         </div>
 
