@@ -33,9 +33,16 @@ async function startServer() {
           return;
         }
 
+        const allowedOrigins = ["https://symptom-iq-1.onrender.com"];
+
         const isLocalhostOrigin =
           /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
-        callback(null, isLocalhostOrigin);
+
+        if (isLocalhostOrigin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
       },
       credentials: true,
     }),
