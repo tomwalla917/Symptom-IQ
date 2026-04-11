@@ -12,7 +12,7 @@ in error. This application has been deployed on Render, check it out here: https
 - By clicking on the 'Add Symptom' button you are able to select the symptom you experienced from a drop down list; and then log the severity, Date, possible triggers, and any additional notes such as exceptional stressors you faced that day, 
 or new medication you are taking. 
 
-<img src="/client/src/assets/AddSymptomScreenShot.png">
+<img src="/client/src/assets/AddSymptomScreenShot.png" alt="Add Symptom" width="400">>
 
 ### View Trends
 - Stat cards on the dashboard screen show trends at a glance by displaying the total number of symptoms you have logged, average severity, and how many symptoms were logged in the last 30 calendar days. 
