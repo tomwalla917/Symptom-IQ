@@ -1,8 +1,10 @@
 # Symptom-IQ
 
 ## Overview
-SymptomIQ is a full stack web application that allows a user to log health symptoms and tracks trends to gain a better understanding of their health. Add new symptom events, modify existing symptoms, or delete them if they were entered
-in error. This application has been deployed on Render, check it out here: https://symptom-iq-1.onrender.com/
+SymptomIQ is a full stack web application that allows a user to log health symptoms and track trends to gain a better understanding of their health. Add new symptom events, modify existing symptoms, or delete them if they were entered
+in error. 
+
+This application has been deployed on Render, check it out here: https://symptom-iq-1.onrender.com/
 
 <div align="center">
 <img src="/client/src/assets/ReadMeGif.gif">
